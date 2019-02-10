@@ -13,6 +13,9 @@
 </head>
 <body>
     <input id="csrf_token" type="hidden" value="{{ csrf_token() }}" name="_token">
+    <input id="is-empty-category" type="hidden" value="{{ count($categories) > 0 ? 'false' : 'true'}}" >
+    <input id="first-category" type="hidden" value="{{ count($categories) > 0 ? $categories->first()->name : '' }}" >
+
 	<div id="mySidenav" class="sidenav">
 		<div class="col-xs-12">
 			<a href="javascript:void(0)" class="btn btn-lg pull-right btn-close-sidenav" onclick="closeNav()">
@@ -24,7 +27,7 @@
 			  <div class="panel-heading"><h4>Categories</h4></div>
 				<div class="list-group category-list">
 					@forelse($categories as $c)
-						<span class="list-group-item" data-id="{{$c->id}}">
+						<span class="list-group-item gallery-category" data-id="{{$c->id}}">
 							<span class="span-editable">{{$c->name}}</span>
 							<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">
 								<i class="glyphicon glyphicon-remove"></i>
@@ -37,32 +40,13 @@
 					@endforelse 
 				</div>
 			</div>
-
-			<hr>
-			<div class="category-controls">
-				<div class="col-xs-6 text-center">
-					<button class="btn btn-success col-xs-12 btn-add-category">
-						<i class="glyphicon glyphicon-plus"></i>
-					</button>
-				</div>
-				<div class="col-xs-6 text-center">
-					<button class="btn btn-primary edit-categories col-xs-12">
-						<i class="glyphicon glyphicon-edit"></i>
-					</button>
-				</div>
-			</div>
-
-			<div class="col-xs-12 text-center category-controls hide">
-				<button class="btn btn-success btn-complete-update col-xs-12">
-					<i class="glyphicon glyphicon-check"></i>
-				</button>
-			</div>
+			@include('partials.category-controls')
 		</div>
 	</div>
 
 	<div class="container">
 		<div class="hidden-xs">
-			<h2 class="text-center">Gallery Categories</h2>
+			<h2 class="text-center category-title">Gallery Categories</h2>
 		</div>
 		<div class="visible-xs">
 			<div class="col-xs-2" style="margin-top: 20px;">
@@ -71,7 +55,7 @@
 				</button>
 			</div>
 			<div class="col-xs-10">
-				<h2 class="text-left">Gallery Categories</h2>
+				<h2 class="text-left category-title">Gallery Categories</h2>
 			</div>
 		</div>
 		<hr>
@@ -81,7 +65,7 @@
 				  <div class="panel-heading"><h4>Categories</h4></div>
 					<div class="list-group category-list">
 						@forelse($categories as $c)
-							<span class="list-group-item" data-id="{{$c->id}}">
+							<span class="list-group-item gallery-category" data-id="{{$c->id}}">
 								<span class="span-editable">{{$c->name}}</span>
 								<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">
 									<i class="glyphicon glyphicon-remove"></i>
@@ -94,25 +78,11 @@
 						@endforelse 
 					</div>
 				</div>
-
-				<hr>
-				<div class="category-controls">
-					<div class="col-xs-6 text-center">
-						<button class="btn btn-success col-xs-12 btn-add-category">
-							<i class="glyphicon glyphicon-plus"></i>
-						</button>
-					</div>
-					<div class="col-xs-6 text-center">
-						<button class="btn btn-primary edit-categories col-xs-12">
-							<i class="glyphicon glyphicon-edit"></i>
-						</button>
-					</div>
-				</div>
-
-				<div class="col-xs-12 text-center category-controls hide">
-					<button class="btn btn-success btn-complete-update col-xs-12">
-						<i class="glyphicon glyphicon-check"></i>
-					</button>
+				@include('partials.category-controls')
+			</div>
+			<div class="col-sm-8 col-xs-12">
+				<div class="gallery well row">
+					<div class="alert alert-default" role="alert">Please select a Category...</div>
 				</div>
 			</div>
 		</div>
@@ -123,143 +93,94 @@
 	  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
 	  crossorigin="anonymous">
 	</script>
-
 	<script src="{{ URL::asset('vendor/bootstrap/js/bootstrap.js') }}"></script>
 	<script src="{{ URL::asset('vendor/bootstrap-dialog/js/bootstrap-dialog.js') }}"></script>
 	<script src="{{ URL::asset('vendor/bootstrap3-editable/js/bootstrap-editable.min.js') }}"></script>
+	<script src="{{ URL::asset('vendor/masonry/masonry.pkgd.min.js') }}"></script>
+
+	<script src="{{ URL::asset('js/nav.js') }}"></script>
+	<script src="{{ URL::asset('js/categories.js') }}"></script>
 	<script type="text/javascript">
-		var $csrfToken = $('#csrf_token').val();
-		function openNav() {
-		  document.getElementById("mySidenav").style.width = "100vw";
+		$key = '34069b277ba8944508bb693eff4ee362';
+		$per_page = 30;
+		$current_category = '';
+
+		function getFlickerImages($key, $text){
+			$.ajax({
+				type : 'GET',
+				url : 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='+$key+'&text='+$text+'&per_page='+$per_page+'&format=json&nojsoncallback=1',
+				success : function(result){
+					if(result.stat == "ok"){
+						$.each(result.photos.photo, function( index, value ) {
+							$('.gallery').append('<div class="col-xs-6 col-md-4">'+
+												  	'<a href="#" class="thumbnail img-gallery" '+
+												  		'data-secret="'+value.secret+'" data-id="'+value.id+'"  title="'+value.title+'">'+
+											    		'<img src="https://farm'+value.farm+'.staticflickr.com/'+value.server+'/'+value.id+'_'+value.secret+'.jpg">'+
+											      	'</a>'+
+										    	'</div>'
+										    );
+						});
+					}
+				}
+			});
 		}
 
-		function closeNav() {
-		  document.getElementById("mySidenav").style.width = "0";
+		function loadNewGallery($this){
+			$('.gallery').html('');
+			$('.gallery-category').removeClass('active');
+			$('.category-title').text($current_category+' Photo Gallery');
+			$this.toggleClass('active');
 		}
 
-		function appendCategory($id, $name){
-			$('.category-list').append('<span class="list-group-item" data-id="'+$id+'">'+
-									'<span class="span-editable">'+$name+'</span>'+
-									'<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">'+
-										'<i class="glyphicon glyphicon-remove"></i>'+
-									'</a>'+
-									'</span>'
-								);
-		}
-
-		$('.edit-categories').on('click', function(){
-			$('.category-controls').toggleClass('hide');
-			$('.btn-delete-category').toggleClass('hide');
-
-			$('.span-editable').editable('option', 'disabled', false);
-			$('.span-editable').editable({
-				ajaxOptions: {
-				    type: 'PUT',
-				    dataType: 'json'
-				},
-		        url: '/Category',
-		        pk: 1,
-		        mode: 'inline',
-		        validate: function(value) {
-				    if($.trim(value) == '') {
-				        return 'Name is required';
-				    }
-				},
-		        params: function(params) {
-		              params._token = $csrfToken;
-		              params.categoryId = $(this).parent('.list-group-item').attr('data-id');
-		              params.name  = params.value;
-		              return params;
-		        },
-		        success: function(response, newValue) {
-		        	if(!response.isSuccess){
-		        		return response.errorMsg['name'][0];
-		        	}
-		    	}
-		    });
+		$(document).off('click', '.gallery-category').on('click', '.gallery-category', function(e){
+			e.preventDefault();
+			$this = $(this); 
+			$current_category = $.trim($this.children('.span-editable').text());
+			closeNav();
+			loadNewGallery($this, $current_category);
+			getFlickerImages($key, $current_category);
 		});
 
-		$('.btn-complete-update').on('click', function(){
-			$('.span-editable').editable('option', 'disabled', true);
-			$('.btn-delete-category').toggleClass('hide');
-			$('.category-controls').toggleClass('hide');
-		})
+		$(document).off('click', '.img-gallery').on('click', '.img-gallery', function(e){
+			$this = $(this);
+			$('.gallery').html('');
+			$id = $this.attr('data-id');
+			$secret = $this.attr('secret');
 
-		$('.btn-add-category').on('click', function(){
-			BootstrapDialog.show({
-	            title: 'Add New Category',
-	            type: BootstrapDialog.TYPE_DEFAULT,
-	            message: $('<input class="form-control" placeholder="Enter Category Name..." id="input-category"></input><p class="text-danger p-error"></p>'),
-	            buttons: [{
-	                label: 'Save',
-	                cssClass: 'btn-success',
-	                hotkey: 13, // Enter.
-	                action: function(dialogRef) {
-	                	$categoryName = $('#input-category').val();
-	                	if($categoryName == ''){
-	                		$('.p-error').text('Category name is required.');
-	                	} else{
-	                		$.ajax({
-	                			type : 'POST',
-	                			url : '/Category',
-	                			data : { name : $categoryName, _token : $csrfToken },
-	                			success : function(res){
-	                				if(res.isSuccess){
-	                					appendCategory(res.id, res.name);
-	                    				dialogRef.close();
-	                				} else{
-	                					$('.p-error').text(res.errorMsg['name'][0]);
-	                				}
-	                			}
-	                		})
-	                	}
-	                }
-	            },
-	            {
-	            	label: 'Cancel',
-	                cssClass: 'btn-default',
-	                action: function(dialogRef){
-	                    dialogRef.close();
-	                }
-	            }]
-	        });
+			$.ajax({
+				type : 'GET',
+				url : 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key='+$key+'&photo_id='+$id+'&secret='+$secret+'&format=json&nojsoncallback=1',
+				success : function(result){
+					if(result.stat == "ok"){
+						$title = result.photo.title._content;
+						$description = (result.photo.description._content == "") ? result.photo.description._content : "No description...";
+						$('.gallery').append('<a href="#" class="btn btn-primary pull-right btn-prev btn-prev-sm hidden-xs" >'+
+												'<i class="glyphicon glyphicon-chevron-left"></i>'+
+											'</a>'+
+											'<a href="#" class="btn btn-primary pull-right btn-prev btn-prev-xs visible-xs" >'+
+												'<i class="glyphicon glyphicon-chevron-left"></i> Back to gallery'+
+											'</a>'+
+											 '<div class="col-xs-12 col-sm-8 img-container">'+
+											    '<img style="max-width: 100%" src="https://farm'+result.photo.farm+'.staticflickr.com/'+result.photo.server+'/'+result.photo.id+'_'+result.photo.secret+'.jpg">'+
+										     '</div>'+
+										     '<div class="col-xs-12 col-sm-4">'+
+												'<h3 class="no-pads-top no-margin-top hidden-xs">Image details</h3>'+
+												'<hr>'+
+												'<h4 style="word-break: break-all;">'+$title+'</h4>'+
+												'<span>'+$description+'</span>'+
+									    	  '</div>'
+										    );
+					}
+				}
+			});
+
+			$(document).off('click', '.btn-prev').on('click', '.btn-prev', function(e){
+				e.preventDefault();
+				$('.gallery').html('');
+				getFlickerImages($key, $current_category);
+			})
 		});
-	    
-	    $(document).on('click','.btn-delete-category', function(){
-	    	$this = $(this);
-
-			BootstrapDialog.show({
-	            title: 'Delete Category',
-	            type: BootstrapDialog.TYPE_DEFAULT,
-	            message: 'Are you sure you want to delete this category?',
-	            buttons: [{
-	                label: 'Delete',
-	                cssClass: 'btn-danger',
-	                action: function(dialogRef) {
-						$category = $this.parent('.list-group-item');
-
-                		$.ajax({
-                			type : 'Delete',
-                			url : '/Category',
-                			data : { id : $category.attr('data-id'), _token : $csrfToken },
-                			success : function(response){
-                				if(response.isSuccess){
-                					$category.remove();
-                    				dialogRef.close();
-                				}
-                			}
-                		})
-	                }
-	            },
-	            {
-	            	label: 'Cancel',
-	                cssClass: 'btn-default',
-	                action: function(dialogRef){
-	                    dialogRef.close();
-	                }
-	            }]
-	        });
-	    });
 	</script>
 </body>
 </html>
+

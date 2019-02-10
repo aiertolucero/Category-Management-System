@@ -14,3 +14,37 @@
 .sidenav .btn-close-sidenav {
 	padding: 16px 0;
 }
+
+.category-list .list-group-item:hover:not(.active){
+  background: #e2e2e2;
+  cursor: pointer;
+}
+
+.category-list .list-group-item.active span, .category-list .list-group-item.active:hover span, .category-list .list-group-item.active:focus span{
+    color: #fff!important;
+}
+
+.img-container{
+    background: #e2e2e2;
+    text-align: center;
+    padding: 1em;
+    border-radius: 5px;
+}
+
+a.btn-prev-sm{
+  position: absolute;
+  right: 19px;
+  z-index: 1;
+}
+
+a.btn-prev-xs{
+  margin-bottom: 1em;
+}
+
+.no-pads-top{
+  padding-top: 0;
+}
+
+.no-margin-top{
+  margin-top: 0;
+}
