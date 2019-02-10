@@ -53,7 +53,9 @@ $('.edit-categories').on('click touchstart', function(e){
     });
 });
 
-$('.btn-complete-update').on('click touchstart', function(){
+$('.btn-complete-update').on('click touchstart', function(e){
+    e.preventDefault();
+    e.stopPropagation();
 	$('.span-editable').removeClass('editable-click');
 	$('.btn-delete-category').toggleClass('hide');
 	$('.category-controls').toggleClass('hide');
