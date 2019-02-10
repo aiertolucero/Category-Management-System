@@ -20,4 +20,7 @@ Route::post('/login', 'LoginController@login');
 Route::group(['middleware' => 'auth'], function()
 {
 	Route::get('/', 'HomeController@index');
+	Route::post('/Category', 'HomeController@addCategory');
+	Route::put('/Category', 'HomeController@updateCategory');
+	Route::delete('/Category', 'HomeController@deleteCategory');
 });
