@@ -5,7 +5,7 @@ function appendCategory($id, $name){
 	$('.category-list').append('<span class="list-group-item gallery-category" data-id="'+$id+'">'+
         							'<span class="span-editable">'+$name+'</span>'+
         							'<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">'+
-        								'<i class="glyphicon glyphicon-remove"></i>'+
+        								'Delete'+
         							'</a>'+
     							'</span>'
 						      );
@@ -41,9 +41,9 @@ $('.edit-categories').on('click', function(){
         	if(!response.isSuccess){
         		return response.errorMsg['name'][0];
         	} else{
-                $(".list-group-item[data-id='"+response.categoryId+"']").html('<span class="span-editable editable-click">'+newValue+'</span>'+
+                $(".list-group-item[data-id='"+response.categoryId+"']").html('<span class="span-editable editable-click editable">'+newValue+'</span>'+
                                                                               '<a class="btn btn-xs btn-danger pull-right btn-delete-category">'+
-                                                                                    '<i class="glyphicon glyphicon-remove"></i>'+
+                                                                                    'Delete'+
                                                                               '</a>'
                                                                             );
             }

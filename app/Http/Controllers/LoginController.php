@@ -15,7 +15,7 @@ class LoginController extends Controller
             return redirect('/');
         }
         else {
-        	return view('login');
+        	return view('login', ['login_error' => 'Invalid Credentials!']);
         }
     }
 }

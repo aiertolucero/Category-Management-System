@@ -7,53 +7,7 @@
 
 	<title>Category Management System</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<style type="text/css">
-		.flex-container {
-		  	display: -ms-flexbox;
-		    display: -webkit-flex;
-		    display: flex;
-		    -webkit-flex-direction: column;
-		    -ms-flex-direction: column;
-		    flex-direction: column;
-		    -webkit-flex-wrap: nowrap;
-		    -ms-flex-wrap: nowrap;
-		    flex-wrap: nowrap;
-		    -webkit-justify-content: center;
-		    -ms-flex-pack: center;
-		    justify-content: center;
-		    -webkit-align-content: stretch;
-		    -ms-flex-line-pack: stretch;
-		    align-content: stretch;
-		    -webkit-align-items: center;
-		    -ms-flex-align: center;
-		    align-items: center;
-		    height: 100vh;
-	    }
-
-		.flex-item-1 {
-		    -webkit-order: 0;
-		    -ms-flex-order: 0;
-		    order: 0;
-		    -webkit-flex: 0 1 auto;
-		    -ms-flex: 0 1 auto;
-		    flex: 0 1 auto;
-		    -webkit-align-self: auto;
-		    -ms-flex-item-align: auto;
-		    align-self: auto;
-	    }
-
-		.flex-item-2 {
-		    -webkit-order: 0;
-		    -ms-flex-order: 0;
-		    order: 0;
-		    -webkit-flex: 0 1 auto;
-		    -ms-flex: 0 1 auto;
-		    flex: 0 1 auto;
-		    -webkit-align-self: auto;
-		    -ms-flex-item-align: auto;
-		    align-self: auto;
-	    }	
-    </style>
+	<link href="{{ asset('css/login.css') }}" rel="stylesheet">
 </head>
 <body>
 		<div class="flex-container">
@@ -61,6 +15,7 @@
 			<form class="flex-item-2" action="/login" method="post" accept-charset="UTF-8">
 			  <input type="hidden" value="{{ csrf_token() }}" name="_token">
 			  <hr>
+			  <p class="text-danger text-center">{{isset($login_error) ? $login_error : ''}}</p>
 			  <div class="form-group">
 			    <label for="inputUsername">Username</label>
 			    <input type="text" class="form-control" id="inputUsername" placeholder="Username" name="username">
