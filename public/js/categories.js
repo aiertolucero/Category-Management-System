@@ -1,21 +1,23 @@
 var $csrfToken = $('#csrf_token').val();
+var $categoryCount = $('#category-count').val();
 
 function appendCategory($id, $name){
 	$('.category-list').append('<span class="list-group-item gallery-category" data-id="'+$id+'">'+
-							'<span class="span-editable">'+$name+'</span>'+
-							'<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">'+
-								'<i class="glyphicon glyphicon-remove"></i>'+
-							'</a>'+
-							'</span>'
-						);
+        							'<span class="span-editable">'+$name+'</span>'+
+        							'<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">'+
+        								'<i class="glyphicon glyphicon-remove"></i>'+
+        							'</a>'+
+    							'</span>'
+						      );
 }
 
 $('.edit-categories').on('click', function(){
 	$('.category-controls').toggleClass('hide');
 	$('.btn-delete-category').toggleClass('hide');
     $('.list-group-item').removeClass('gallery-category');
-
-	$('.span-editable').editable('option', 'disabled', false);
+    $('.span-editable').toggleClass('editable-click');
+    
+    // $('.span-editable').editable('option', 'enable', true);
 	$('.span-editable').editable({
 		ajaxOptions: {
 		    type: 'PUT',
@@ -38,13 +40,19 @@ $('.edit-categories').on('click', function(){
         success: function(response, newValue) {
         	if(!response.isSuccess){
         		return response.errorMsg['name'][0];
-        	}
+        	} else{
+                $(".list-group-item[data-id='"+response.categoryId+"']").html('<span class="span-editable editable-click">'+newValue+'</span>'+
+                                                                              '<a class="btn btn-xs btn-danger pull-right btn-delete-category">'+
+                                                                                    '<i class="glyphicon glyphicon-remove"></i>'+
+                                                                              '</a>'
+                                                                            );
+            }
     	}
     });
 });
 
 $('.btn-complete-update').on('click', function(){
-	$('.span-editable').editable('option', 'disabled', true);
+	$('.span-editable').removeClass('editable-click');
 	$('.btn-delete-category').toggleClass('hide');
 	$('.category-controls').toggleClass('hide');
     $('.list-group-item').addClass('gallery-category');
@@ -71,6 +79,12 @@ $('.btn-add-category').on('click', function(){
             			success : function(res){
             				if(res.isSuccess){
             					appendCategory(res.id, res.name);
+
+                                $categoryCount++;
+                                if($categoryCount == 1){
+                                    $('.panel-body').remove();
+                                }
+
                 				dialogRef.close();
             				} else{
             					$('.p-error').text(res.errorMsg['name'][0]);
@@ -111,6 +125,14 @@ $(document).off('click','.btn-delete-category').on('click','.btn-delete-category
         				if(response.isSuccess){
         					$category.remove();
             				dialogRef.close();
+                            $categoryCount -= 1;
+                            if($categoryCount == 0){
+                                $('.category-list').append('<div class="panel-body">'+
+                                                           'No categories found...'+
+                                                           '</div>'
+                                                           );
+                            }
+                            $(".list-group-item[data-id='"+$category.attr('data-id')+"']").remove();
         				}
         			}
         		})

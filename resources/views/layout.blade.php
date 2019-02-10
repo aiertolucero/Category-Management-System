@@ -13,8 +13,7 @@
 </head>
 <body>
     <input id="csrf_token" type="hidden" value="{{ csrf_token() }}" name="_token">
-    <input id="is-empty-category" type="hidden" value="{{ count($categories) > 0 ? 'false' : 'true'}}" >
-    <input id="first-category" type="hidden" value="{{ count($categories) > 0 ? $categories->first()->name : '' }}" >
+    <input id="category-count" type="hidden" value="{{count($categories)}}" >
 
 	<div id="mySidenav" class="sidenav">
 		<div class="col-xs-12">

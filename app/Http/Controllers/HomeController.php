@@ -61,7 +61,8 @@ class HomeController extends Controller
 			$category->save();
 
             return response()->json([
-                'isSuccess' => true
+                'isSuccess' => true,
+                'categoryId' => $request->categoryId
             ]);
         }
     }
