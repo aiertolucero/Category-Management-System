@@ -14,7 +14,7 @@
 </div>
 
 <div class="col-xs-12 text-center category-controls hide">
-	<button class="btn btn-success btn-complete-update col-xs-12">
-		<i class="glyphicon glyphicon-check"></i>
+	<button class="btn btn-default btn-complete-update col-xs-12">
+		Close
 	</button>
 </div>

@@ -59,7 +59,7 @@
 		</div>
 		<hr>
 		<div class="row">
-			<div class="col-sm-4 hidden-xs">
+			<div class="col-sm-4 hidden-xs" style="margin-bottom: 1em">
 				<div class="panel panel-default">
 				  <div class="panel-heading"><h4>Categories</h4></div>
 					<div class="list-group category-list">
