@@ -31,6 +31,7 @@ function loadNewGallery($this){
 
 $(document).off('click touchstart', '.gallery-category').on('click touchstart', '.gallery-category', function(e){
 	e.preventDefault();
+    e.stopPropagation();
 	$this = $(this); 
 	$current_category = $.trim($this.children('.span-editable').text());
 	closeNav();
@@ -39,6 +40,8 @@ $(document).off('click touchstart', '.gallery-category').on('click touchstart', 
 });
 
 $(document).off('click touchstart', '.img-gallery').on('click touchstart', '.img-gallery', function(e){
+	e.preventDefault();
+    e.stopPropagation();
 	$this = $(this);
 	$('.gallery').html('');
 	$id = $this.attr('data-id');
@@ -72,7 +75,8 @@ $(document).off('click touchstart', '.img-gallery').on('click touchstart', '.img
 	});
 
 	$(document).off('click touchstart', '.btn-prev').on('click touchstart', '.btn-prev', function(e){
-		e.preventDefault();
+	    e.preventDefault();
+	    e.stopPropagation();
 		$('.gallery').html('');
 		getFlickerImages($key, $current_category);
 	})

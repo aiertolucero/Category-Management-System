@@ -11,7 +11,9 @@ function appendCategory($id, $name){
 						      );
 }
 
-$('.edit-categories').on('click touchstart', function(){
+$('.edit-categories').on('click touchstart', function(e){
+    e.preventDefault();
+    e.stopPropagation();
 	$('.category-controls').toggleClass('hide');
 	$('.btn-delete-category').toggleClass('hide');
     $('.list-group-item').removeClass('gallery-category');
@@ -58,7 +60,9 @@ $('.btn-complete-update').on('click touchstart', function(){
     $('.list-group-item').addClass('gallery-category');
 })
 
-$('.btn-add-category').on('click touchstart', function(){
+$('.btn-add-category').on('click touchstart', function(e){
+    e.preventDefault();
+    e.stopPropagation();
 	BootstrapDialog.show({
         title: 'Add New Category',
         type: BootstrapDialog.TYPE_DEFAULT,
@@ -106,6 +110,7 @@ $('.btn-add-category').on('click touchstart', function(){
 
 $(document).off('click touchstart','.btn-delete-category').on('click touchstart','.btn-delete-category', function(e){
     e.preventDefault();
+    e.stopPropagation();
 	$this = $(this);
 
 	BootstrapDialog.show({
