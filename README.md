@@ -1,5 +1,5 @@
 # Category-Management-System
-Creating a Responsive Gallery using Bootstrap 3 and Flickr and a PHP MVC Framework
+Responsive Gallery using Bootstrap 3, Flickr API and Laravel framework.
 
 Install [Composer](https://getcomposer.org/download/), [Xampp](https://www.apachefriends.org/download.html) or just [MySQL](https://www.mysql.com/downloads/) and run the following:
 
