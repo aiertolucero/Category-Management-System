@@ -29,7 +29,7 @@
 						<span class="list-group-item gallery-category" data-id="{{$c->id}}">
 							<span class="span-editable">{{$c->name}}</span>
 							<a class="btn btn-xs btn-danger pull-right btn-delete-category hide">
-								<i class="glyphicon glyphicon-remove"></i>
+								Delete
 							</a>
 						</span>
 					@empty

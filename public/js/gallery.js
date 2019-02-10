@@ -29,7 +29,7 @@ function loadNewGallery($this){
 	$this.toggleClass('active');
 }
 
-$(document).off('click', '.gallery-category').on('click', '.gallery-category', function(e){
+$(document).off('click touchstart', '.gallery-category').on('click touchstart', '.gallery-category', function(e){
 	e.preventDefault();
 	$this = $(this); 
 	$current_category = $.trim($this.children('.span-editable').text());
@@ -38,7 +38,7 @@ $(document).off('click', '.gallery-category').on('click', '.gallery-category', f
 	getFlickerImages($key, $current_category);
 });
 
-$(document).off('click', '.img-gallery').on('click', '.img-gallery', function(e){
+$(document).off('click touchstart', '.img-gallery').on('click touchstart', '.img-gallery', function(e){
 	$this = $(this);
 	$('.gallery').html('');
 	$id = $this.attr('data-id');
@@ -71,7 +71,7 @@ $(document).off('click', '.img-gallery').on('click', '.img-gallery', function(e)
 		}
 	});
 
-	$(document).off('click', '.btn-prev').on('click', '.btn-prev', function(e){
+	$(document).off('click touchstart', '.btn-prev').on('click touchstart', '.btn-prev', function(e){
 		e.preventDefault();
 		$('.gallery').html('');
 		getFlickerImages($key, $current_category);
