@@ -1,6 +1,8 @@
 # Category-Management-System
 Responsive Gallery using Bootstrap 3, Flickr API and Laravel framework.
 
+Live sample : http://categorymanagement.aiertolucero.com
+
 Install [Composer](https://getcomposer.org/download/), [Xampp](https://www.apachefriends.org/download.html) or just [MySQL](https://www.mysql.com/downloads/) and run the following:
 
 
